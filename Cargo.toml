@@ -1,0 +1,24 @@
+[package]
+name = "deadpy"
+version = "0.1.0"
+edition = "2021"
+description = "Fast Python dead code detector, built on tree-sitter"
+license = "MIT"
+repository = "https://github.com/brightwave-inc/deadpy"
+readme = "README.md"
+keywords = ["python", "dead-code", "unused", "linter", "tree-sitter"]
+categories = ["development-tools", "command-line-utilities"]
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+tree-sitter = "0.24"
+tree-sitter-python = "0.23"
+rayon = "1.10"
+globset = "0.4"
+ignore = "0.4"
+toml = "0.8"
+serde = { version = "1.0", features = ["derive"] }
+anyhow = "1.0"
+
+[dev-dependencies]
+tempfile = "3"
