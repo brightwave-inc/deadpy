@@ -1,0 +1,10 @@
+- id: deadpy
+  name: deadpy
+  description: Fast Python dead code detector
+  entry: deadpy
+  language: rust
+  types: [python]
+  # Dead-code analysis needs the WHOLE codebase to know whether a definition is
+  # referenced anywhere, so we never pass only the changed files — deadpy scans
+  # the paths from [tool.deadpy] (or the repo root) on every run.
+  pass_filenames: false

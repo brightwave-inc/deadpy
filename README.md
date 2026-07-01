@@ -79,6 +79,23 @@ report = ["function", "class", "method"]
 whitelist = ["whitelist.py"]
 ```
 
+## Pre-commit hook
+
+Add deadpy to your [pre-commit](https://pre-commit.com) config:
+
+```yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/brightwave-inc/deadpy
+    rev: v0.1.2
+    hooks:
+      - id: deadpy
+```
+
+The hook scans your whole project on every run — not just the changed files, since dead-code analysis needs the full codebase to know whether a definition is referenced anywhere — and honors `[tool.deadpy]` in your `pyproject.toml`.
+
+> Requires a [Rust toolchain](https://rustup.rs/) on the machine running the hook (pre-commit builds deadpy from source). A zero-toolchain hook will follow once prebuilt wheels ship on PyPI.
+
 ## How it decides something is dead
 
 A definition (function, class, method, variable, or import) is flagged unless one of the following holds:
