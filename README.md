@@ -10,9 +10,15 @@ Static "find unused code" tools for Python (e.g. [vulture](https://github.com/je
 
 ## Installation
 
-### From source
+### From crates.io
 
 Requires a [Rust toolchain](https://rustup.rs/):
+
+```sh
+cargo install deadpy
+```
+
+### From source
 
 ```sh
 git clone https://github.com/brightwave-inc/deadpy.git
