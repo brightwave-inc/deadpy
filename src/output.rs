@@ -38,7 +38,7 @@ pub fn format_findings(findings: &[Finding], format: OutputFormat, sort_by_size:
     let mut sorted: Vec<&Finding> = findings.iter().collect();
 
     if sort_by_size {
-        sorted.sort_by(|a, b| b.definition.size.cmp(&a.definition.size));
+        sorted.sort_by_key(|f| std::cmp::Reverse(f.definition.size));
     } else {
         sorted.sort_by(|a, b| {
             a.definition
