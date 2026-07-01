@@ -1,6 +1,6 @@
 [package]
 name = "deadpy"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2021"
 description = "Fast Python dead code detector, built on tree-sitter"
 license = "MIT"
@@ -8,6 +8,16 @@ repository = "https://github.com/brightwave-inc/deadpy"
 readme = "README.md"
 keywords = ["python", "dead-code", "unused", "linter", "tree-sitter"]
 categories = ["development-tools", "command-line-utilities"]
+
+# Lets `cargo binstall deadpy` fetch the prebuilt binaries attached to GitHub
+# Releases (uploaded by taiki-e/upload-rust-binary-action in release.yml).
+[package.metadata.binstall]
+pkg-url = "{ repo }/releases/download/v{ version }/{ name }-{ target }.{ archive-format }"
+bin-dir = "{ bin }{ binary-ext }"
+pkg-fmt = "tgz"
+
+[package.metadata.binstall.overrides.x86_64-pc-windows-msvc]
+pkg-fmt = "zip"
 
 [dependencies]
 clap = { version = "4", features = ["derive"] }
