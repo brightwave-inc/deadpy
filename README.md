@@ -10,9 +10,17 @@ Static "find unused code" tools for Python (e.g. [vulture](https://github.com/je
 
 ## Installation
 
+### Prebuilt binary (no Rust toolchain)
+
+Each [release](https://github.com/brightwave-inc/deadpy/releases) ships prebuilt binaries for Linux (x86_64/aarch64) and Apple Silicon macOS. Grab one directly, or install via [`cargo-binstall`](https://github.com/cargo-bins/cargo-binstall) (downloads the prebuilt binary, no compile):
+
+```sh
+cargo binstall deadpy
+```
+
 ### From crates.io
 
-Requires a [Rust toolchain](https://rustup.rs/):
+Compiles from source; requires a [Rust toolchain](https://rustup.rs/):
 
 ```sh
 cargo install deadpy
@@ -27,7 +35,7 @@ cargo build --release
 ./target/release/deadpy --help
 ```
 
-> **Coming soon:** `pip install deadpy` (prebuilt wheels, no Rust toolchain required) and downloadable binaries on the [Releases](https://github.com/brightwave-inc/deadpy/releases) page.
+> **Coming soon:** `pip install deadpy` (PyPI wheels, so `pip`/`uvx`/`pipx` can install it with no Rust toolchain).
 
 ## Usage
 
@@ -79,6 +87,42 @@ report = ["function", "class", "method"]
 whitelist = ["whitelist.py"]
 ```
 
+## Continuous integration
+
+`deadpy` exits non-zero when it finds dead code, so it gates a build with no extra scripting. Install the prebuilt binary with `cargo-binstall` (no compilation) and run it:
+
+### GitHub Actions
+
+```yaml
+name: dead-code
+on: [push, pull_request]
+
+jobs:
+  deadpy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cargo-bins/cargo-binstall@main
+      # Pin a version for reproducible CI (drop @x.y.z to always use latest).
+      - run: cargo binstall -y deadpy@0.1.3
+      - run: deadpy
+```
+
+The final `deadpy` step fails the job if any dead code is found. It reads `[tool.deadpy]` from your `pyproject.toml` (or pass paths/flags directly, e.g. `deadpy src/ --min-confidence 80`).
+
+### GitLab CI
+
+```yaml
+deadpy:
+  image: rust:latest
+  script:
+    - cargo install cargo-binstall
+    - cargo binstall -y deadpy@0.1.3
+    - deadpy
+```
+
+For a machine-readable gate (e.g. to post a count), use `deadpy --format json` or `deadpy --format count`.
+
 ## Pre-commit hook
 
 Add deadpy to your [pre-commit](https://pre-commit.com) config:
@@ -87,7 +131,7 @@ Add deadpy to your [pre-commit](https://pre-commit.com) config:
 # .pre-commit-config.yaml
 repos:
   - repo: https://github.com/brightwave-inc/deadpy
-    rev: v0.1.2
+    rev: v0.1.3
     hooks:
       - id: deadpy
 ```

@@ -42,16 +42,16 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          # Linux x86_64 (CI runners, most servers) + aarch64 (ARM containers,
+          # Graviton) and Apple Silicon macOS (local dev). Anyone on another
+          # platform falls back to `cargo install` / `cargo binstall` compiling
+          # from source, so this list only needs the common targets.
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
           - target: aarch64-unknown-linux-gnu
             os: ubuntu-latest
-          - target: x86_64-apple-darwin
-            os: macos-13
           - target: aarch64-apple-darwin
             os: macos-latest
-          - target: x86_64-pc-windows-msvc
-            os: windows-latest
     runs-on: ${{ matrix.os }}
     permissions:
       contents: write
