@@ -1,0 +1,33 @@
+name: Release
+
+# Publishes to crates.io when a GitHub Release is published.
+#
+# Authenticated via crates.io Trusted Publishing (OIDC) — the publish is tied to
+# THIS repository (brightwave-inc/deadpy), not any individual's API token.
+#
+# One-time setup (see README / the repo's release docs):
+#   1. Publish v0.1.0 once manually (`cargo publish`) to create the crate.
+#   2. Add the org team as an owner:  cargo owner --add github:brightwave-inc:engineering
+#   3. On https://crates.io/crates/deadpy/settings, add a Trusted Publisher:
+#        repository = brightwave-inc/deadpy, workflow = release.yml
+#   4. (Optional) Enable "Require Trusted Publishing" to disable token publishing.
+#
+# After that: bump the version in Cargo.toml, cut a GitHub Release, and this runs.
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: rust-lang/crates-io-auth-action@v1
+        id: auth
+      - run: cargo publish
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
