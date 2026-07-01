@@ -26,6 +26,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
+      # Verify the release compiles and passes tests before publishing an
+      # immutable version to crates.io.
+      - run: cargo test --release
       - uses: rust-lang/crates-io-auth-action@v1
         id: auth
       - run: cargo publish
